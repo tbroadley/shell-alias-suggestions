@@ -58,7 +58,9 @@ def analyze_command(command: str) -> str | None:
         return None
 
     if config.is_debug():
-        print(f"DEBUG: Best match: {best_match.alias.name} ({best_match.confidence:.2f}, {best_match.match_type})")
+        print(
+            f"DEBUG: Best match: {best_match.alias.name} ({best_match.confidence:.2f}, {best_match.match_type})"
+        )
 
     is_git = best_match.alias.source == "git config"
     suggestion = Suggestion(

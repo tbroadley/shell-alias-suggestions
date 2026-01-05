@@ -108,7 +108,9 @@ def test():
     test_cmd = "git status"
     matches = pattern_matcher.find_matches(test_cmd, aliases)
     if matches:
-        click.echo(click.style(f" OK ({len(matches)} matches for '{test_cmd}')", fg="green"))
+        click.echo(
+            click.style(f" OK ({len(matches)} matches for '{test_cmd}')", fg="green")
+        )
     else:
         click.echo(click.style(" No matches (normal if no git aliases)", fg="yellow"))
 
@@ -122,7 +124,9 @@ def test():
         except (ValueError, FileNotFoundError):
             pass
     if installed_shells:
-        click.echo(click.style(f" Installed: {', '.join(installed_shells)}", fg="green"))
+        click.echo(
+            click.style(f" Installed: {', '.join(installed_shells)}", fg="green")
+        )
     else:
         click.echo(click.style(" Not installed", fg="yellow"))
         click.echo("   Run 'alias-suggest install' to install hooks")

@@ -4,7 +4,9 @@ from pathlib import Path
 DATA_DIR = Path.home() / ".local" / "share" / "alias-suggest"
 CACHE_FILE = DATA_DIR / "cache.json"
 
-SKIP_COMMANDS = frozenset({"cd", "ls", "clear", "pwd", "exit", "history", "fg", "bg", "jobs"})
+SKIP_COMMANDS = frozenset(
+    {"cd", "ls", "clear", "pwd", "exit", "history", "fg", "bg", "jobs"}
+)
 
 
 def is_disabled() -> bool:

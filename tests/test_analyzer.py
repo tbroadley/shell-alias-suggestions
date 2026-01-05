@@ -59,7 +59,9 @@ class TestFormatSuggestion:
         assert "💡" in result
 
     def test_format_git_suggestion_with_prefix(self):
-        suggestion = analyzer.Suggestion(alias_name="st", expansion="status", git_prefix="g")
+        suggestion = analyzer.Suggestion(
+            alias_name="st", expansion="status", git_prefix="g"
+        )
         result = analyzer.format_suggestion(suggestion)
 
         assert "'g st'" in result
