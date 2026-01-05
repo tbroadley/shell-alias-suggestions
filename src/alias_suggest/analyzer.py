@@ -1,7 +1,6 @@
 import json
 import sys
 import time
-from pathlib import Path
 
 from alias_suggest import alias_parser
 from alias_suggest import config
@@ -88,7 +87,9 @@ def analyze_command(command: str) -> str | None:
     high_conf_candidates = [c for c in candidates if c.confidence >= min_conf]
     if not high_conf_candidates:
         if config.is_debug():
-            print(f"DEBUG: No candidates above {min_conf} confidence. Best: {candidates[0].confidence:.2f}")
+            print(
+                f"DEBUG: No candidates above {min_conf} confidence. Best: {candidates[0].confidence:.2f}"
+            )
         return None
 
     if config.is_debug():
@@ -100,7 +101,10 @@ def analyze_command(command: str) -> str | None:
 
     if suggestion:
         record_suggestion()
-        is_git = any(c.alias.source == "git config" and c.alias.name == suggestion.alias_name for c in candidates)
+        is_git = any(
+            c.alias.source == "git config" and c.alias.name == suggestion.alias_name
+            for c in candidates
+        )
         return format_suggestion(suggestion, is_git)
 
     return None
@@ -111,4 +115,3 @@ def run_analysis(command: str) -> int:
     if result:
         print(result, file=sys.stderr)
     return 0
-

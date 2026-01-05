@@ -54,7 +54,9 @@ class TestFindMatches:
         assert any(m.alias.name == "ll" for m in matches)
 
     def test_git_prefix_match(self, sample_aliases):
-        matches = pattern_matcher.find_matches("git checkout -b feature", sample_aliases)
+        matches = pattern_matcher.find_matches(
+            "git checkout -b feature", sample_aliases
+        )
         assert len(matches) > 0
         assert any(m.alias.name == "cb" for m in matches)
 
@@ -69,7 +71,9 @@ class TestFindMatches:
 
 class TestGetBestMatch:
     def test_high_confidence_match(self, sample_aliases):
-        result = pattern_matcher.get_best_match("ls -la", sample_aliases, min_confidence=0.8)
+        result = pattern_matcher.get_best_match(
+            "ls -la", sample_aliases, min_confidence=0.8
+        )
         assert result is not None
         assert result.alias.name == "ll"
 
@@ -82,6 +86,7 @@ class TestGetBestMatch:
         assert result is None or result.confidence >= 0.95
 
     def test_no_match_returns_none(self, sample_aliases):
-        result = pattern_matcher.get_best_match("echo hello", sample_aliases, min_confidence=0.8)
+        result = pattern_matcher.get_best_match(
+            "echo hello", sample_aliases, min_confidence=0.8
+        )
         assert result is None
-

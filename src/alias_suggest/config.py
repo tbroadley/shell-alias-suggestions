@@ -5,7 +5,9 @@ DATA_DIR = Path.home() / ".local" / "share" / "alias-suggest"
 CACHE_FILE = DATA_DIR / "cache.json"
 SUGGESTIONS_LOG = DATA_DIR / "suggestions.log"
 
-SKIP_COMMANDS = frozenset({"cd", "ls", "clear", "pwd", "exit", "history", "fg", "bg", "jobs"})
+SKIP_COMMANDS = frozenset(
+    {"cd", "ls", "clear", "pwd", "exit", "history", "fg", "bg", "jobs"}
+)
 
 
 def get_api_key() -> str | None:
@@ -38,4 +40,3 @@ def is_debug() -> bool:
 
 def ensure_data_dir() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-

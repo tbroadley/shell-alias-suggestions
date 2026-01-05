@@ -14,7 +14,9 @@ class TestParseLlmResponse:
             ("ALIAS: co\nEXPANSION: checkout", "co", "checkout"),
         ],
     )
-    def test_parse_valid_response(self, response: str, expected_alias: str, expected_expansion: str):
+    def test_parse_valid_response(
+        self, response: str, expected_alias: str, expected_expansion: str
+    ):
         result = llm.parse_llm_response(response)
         assert result is not None
         assert result.alias_name == expected_alias
@@ -25,7 +27,9 @@ class TestParseLlmResponse:
         assert result is None
 
     def test_parse_no_suggestion_with_explanation(self):
-        result = llm.parse_llm_response("NO_SUGGESTION - the command doesn't match any alias")
+        result = llm.parse_llm_response(
+            "NO_SUGGESTION - the command doesn't match any alias"
+        )
         assert result is None
 
     def test_parse_invalid_response(self):
@@ -110,11 +114,15 @@ class TestGetSuggestion:
 
         mocker.patch("alias_suggest.config.get_api_key", return_value="test-key")
         mocker.patch("alias_suggest.config.is_debug", return_value=False)
-        mocker.patch("alias_suggest.config.get_model", return_value="claude-3-5-haiku-20241022")
+        mocker.patch(
+            "alias_suggest.config.get_model", return_value="claude-3-5-haiku-20241022"
+        )
         mocker.patch("alias_suggest.config.get_timeout", return_value=2.0)
 
         mock_client = mocker.Mock()
-        mock_client.messages.create.side_effect = anthropic.APITimeoutError(request=mocker.Mock())
+        mock_client.messages.create.side_effect = anthropic.APITimeoutError(
+            request=mocker.Mock()
+        )
         mocker.patch("anthropic.Anthropic", return_value=mock_client)
 
         candidates = [
@@ -128,4 +136,3 @@ class TestGetSuggestion:
         result = llm.get_suggestion("ls -la", candidates)
         assert result is not None
         assert result.alias_name == "ll"
-

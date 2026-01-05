@@ -27,7 +27,9 @@ def calculate_similarity(cmd_tokens: list[str], expansion_tokens: list[str]) -> 
     return matching / len(expansion_tokens)
 
 
-def find_matches(command: str, aliases: list[alias_parser.Alias]) -> list[MatchCandidate]:
+def find_matches(
+    command: str, aliases: list[alias_parser.Alias]
+) -> list[MatchCandidate]:
     cmd_tokens = tokenize_command(command)
     if not cmd_tokens:
         return []
@@ -60,7 +62,9 @@ def find_matches(command: str, aliases: list[alias_parser.Alias]) -> list[MatchC
             if exp_git_tokens == git_subcmd_tokens[: len(exp_git_tokens)]:
                 remaining_args = len(git_subcmd_tokens) - len(exp_git_tokens)
                 confidence = 1.0 - (remaining_args * 0.1)
-                candidates.append(MatchCandidate(alias, max(0.5, confidence), "prefix_git_tokens"))
+                candidates.append(
+                    MatchCandidate(alias, max(0.5, confidence), "prefix_git_tokens")
+                )
                 continue
         else:
             if alias.expansion == command:
@@ -68,10 +72,11 @@ def find_matches(command: str, aliases: list[alias_parser.Alias]) -> list[MatchC
                 continue
 
             if command.startswith(alias.expansion + " "):
-                remaining = command[len(alias.expansion) + 1 :]
                 confidence = len(alias.expansion) / len(command)
                 if confidence >= 0.3:
-                    candidates.append(MatchCandidate(alias, min(0.95, confidence + 0.3), "prefix"))
+                    candidates.append(
+                        MatchCandidate(alias, min(0.95, confidence + 0.3), "prefix")
+                    )
                 continue
 
             if command.startswith(alias.expansion):
@@ -83,7 +88,9 @@ def find_matches(command: str, aliases: list[alias_parser.Alias]) -> list[MatchC
             if exp_tokens == cmd_tokens[: len(exp_tokens)]:
                 remaining_args = len(cmd_tokens) - len(exp_tokens)
                 confidence = 1.0 - (remaining_args * 0.05)
-                candidates.append(MatchCandidate(alias, max(0.5, confidence), "prefix_tokens"))
+                candidates.append(
+                    MatchCandidate(alias, max(0.5, confidence), "prefix_tokens")
+                )
                 continue
 
             similarity = calculate_similarity(cmd_tokens, exp_tokens)
@@ -103,4 +110,3 @@ def get_best_match(
     if matches and matches[0].confidence >= min_confidence:
         return matches[0]
     return None
-

@@ -39,7 +39,9 @@ def get_shell_config_files() -> list[Path]:
 
 def parse_shell_aliases(content: str) -> list[tuple[str, str]]:
     aliases = []
-    alias_pattern = re.compile(r"""^\s*alias\s+([^=]+)=(['"]?)(.+?)\2\s*$""", re.MULTILINE)
+    alias_pattern = re.compile(
+        r"""^\s*alias\s+([^=]+)=(['"]?)(.+?)\2\s*$""", re.MULTILINE
+    )
     for match in alias_pattern.finditer(content):
         name = match.group(1).strip()
         expansion = match.group(3).strip()
@@ -95,7 +97,10 @@ def load_cache() -> AliasCache | None:
 def save_cache(cache: AliasCache) -> None:
     config.ensure_data_dir()
     data = {
-        "aliases": [{"name": a.name, "expansion": a.expansion, "source": a.source} for a in cache.aliases],
+        "aliases": [
+            {"name": a.name, "expansion": a.expansion, "source": a.source}
+            for a in cache.aliases
+        ],
         "file_mtimes": cache.file_mtimes,
     }
     config.CACHE_FILE.write_text(json.dumps(data, indent=2))
@@ -142,4 +147,3 @@ def clear_cache() -> bool:
         config.CACHE_FILE.unlink()
         return True
     return False
-

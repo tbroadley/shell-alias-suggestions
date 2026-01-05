@@ -26,7 +26,7 @@ If no good match, respond with: NO_SUGGESTION"""
 def format_aliases_for_prompt(candidates: list[pattern_matcher.MatchCandidate]) -> str:
     lines = []
     for c in candidates:
-        source_info = f" (git alias)" if c.alias.source == "git config" else ""
+        source_info = " (git alias)" if c.alias.source == "git config" else ""
         lines.append(f"- {c.alias.name} = {c.alias.expansion}{source_info}")
     return "\n".join(lines)
 
@@ -85,9 +85,10 @@ def get_suggestion(
         return _fallback_suggestion(candidates)
 
 
-def _fallback_suggestion(candidates: list[pattern_matcher.MatchCandidate]) -> Suggestion | None:
+def _fallback_suggestion(
+    candidates: list[pattern_matcher.MatchCandidate],
+) -> Suggestion | None:
     if candidates and candidates[0].confidence >= 0.95:
         best = candidates[0]
         return Suggestion(alias_name=best.alias.name, expansion=best.alias.expansion)
     return None
-

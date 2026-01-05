@@ -67,7 +67,10 @@ def uninstall_hook(shell: str) -> tuple[bool, str]:
 
     if HOOK_MARKER_START not in content:
         if "alias-suggest" in content:
-            return False, f"Found alias-suggest references but not in expected format in {config_path}"
+            return (
+                False,
+                f"Found alias-suggest references but not in expected format in {config_path}",
+            )
         return False, f"No hook found in {config_path}"
 
     lines = content.splitlines()
@@ -102,4 +105,3 @@ def detect_available_shells() -> list[str]:
         shells.append("zsh")
 
     return shells if shells else ["bash"]
-

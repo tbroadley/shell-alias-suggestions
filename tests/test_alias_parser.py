@@ -40,7 +40,9 @@ class TestAliasCache:
             alias_parser.Alias("ll", "ls -la", "/home/user/.bashrc"),
             alias_parser.Alias("gst", "git status", "git config"),
         ]
-        cache = alias_parser.AliasCache(aliases=aliases, file_mtimes={"/home/user/.bashrc": 12345.0})
+        cache = alias_parser.AliasCache(
+            aliases=aliases, file_mtimes={"/home/user/.bashrc": 12345.0}
+        )
 
         alias_parser.save_cache(cache)
         loaded = alias_parser.load_cache()
@@ -81,4 +83,3 @@ class TestGetGitAliases:
         mocker.patch("subprocess.run", side_effect=FileNotFoundError())
         aliases = alias_parser.get_git_aliases()
         assert aliases == []
-

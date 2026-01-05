@@ -109,4 +109,3 @@ class TestAnalyzeCommand:
         log_file.write_text(json.dumps([time.time()]))
 
         assert analyzer.analyze_command("git status") is None
-
