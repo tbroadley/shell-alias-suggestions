@@ -10,7 +10,15 @@ __alias_suggest_check() {
     fi
     
     [ -z "$last_cmd" ] && return
+    [ "$last_cmd" = "$__ALIAS_SUGGEST_LAST_CMD" ] && return
     
+    if [ -z "$__ALIAS_SUGGEST_INITIALIZED" ]; then
+        __ALIAS_SUGGEST_INITIALIZED=1
+        __ALIAS_SUGGEST_LAST_CMD="$last_cmd"
+        return
+    fi
+    
+    __ALIAS_SUGGEST_LAST_CMD="$last_cmd"
     alias-suggest analyze "$last_cmd" 2>&1
 }
 
