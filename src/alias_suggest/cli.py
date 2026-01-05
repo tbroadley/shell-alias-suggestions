@@ -11,7 +11,7 @@ from alias_suggest import hooks
 @click.group()
 @click.version_option()
 def main():
-    """Shell alias suggestion tool powered by Claude."""
+    """Shell alias suggestion tool."""
     pass
 
 
@@ -79,20 +79,9 @@ def show_config():
     """Show current configuration."""
     click.echo("Configuration (from environment variables):")
     click.echo()
-
-    api_key = config.get_api_key()
-    if api_key:
-        masked = api_key[:8] + "..." + api_key[-4:] if len(api_key) > 12 else "***"
-        click.echo(f"  ANTHROPIC_API_KEY:        {masked}")
-    else:
-        click.echo(click.style("  ANTHROPIC_API_KEY:        (not set)", fg="red"))
-
-    click.echo(f"  ALIAS_SUGGEST_DISABLED:   {config.is_disabled()}")
-    click.echo(f"  ALIAS_SUGGEST_MODEL:      {config.get_model()}")
-    click.echo(f"  ALIAS_SUGGEST_MAX_HOURLY: {config.get_max_hourly()}")
-    click.echo(f"  ALIAS_SUGGEST_TIMEOUT:    {config.get_timeout()}s")
-    click.echo(f"  ALIAS_SUGGEST_MIN_CONF:   {config.get_min_confidence()}")
-    click.echo(f"  ALIAS_SUGGEST_DEBUG:      {config.is_debug()}")
+    click.echo(f"  ALIAS_SUGGEST_DISABLED: {config.is_disabled()}")
+    click.echo(f"  ALIAS_SUGGEST_MIN_CONF: {config.get_min_confidence()}")
+    click.echo(f"  ALIAS_SUGGEST_DEBUG:    {config.is_debug()}")
     click.echo()
     click.echo(f"Data directory: {config.DATA_DIR}")
     click.echo(f"Cache file:     {config.CACHE_FILE}")
@@ -104,14 +93,7 @@ def test():
     click.echo("Running self-test...")
     click.echo()
 
-    click.echo("1. Checking API key...", nl=False)
-    if config.get_api_key():
-        click.echo(click.style(" OK", fg="green"))
-    else:
-        click.echo(click.style(" MISSING", fg="red"))
-        click.echo("   Set ANTHROPIC_API_KEY environment variable")
-
-    click.echo("2. Loading aliases...", nl=False)
+    click.echo("1. Loading aliases...", nl=False)
     aliases = alias_parser.get_all_aliases()
     click.echo(click.style(f" {len(aliases)} found", fg="green"))
 
@@ -120,19 +102,17 @@ def test():
     click.echo(f"   - Shell aliases: {len(shell_aliases)}")
     click.echo(f"   - Git aliases: {len(git_aliases)}")
 
-    click.echo("3. Testing pattern matcher...", nl=False)
+    click.echo("2. Testing pattern matcher...", nl=False)
     from alias_suggest import pattern_matcher
 
     test_cmd = "git status"
     matches = pattern_matcher.find_matches(test_cmd, aliases)
     if matches:
-        click.echo(
-            click.style(f" OK ({len(matches)} matches for '{test_cmd}')", fg="green")
-        )
+        click.echo(click.style(f" OK ({len(matches)} matches for '{test_cmd}')", fg="green"))
     else:
         click.echo(click.style(" No matches (normal if no git aliases)", fg="yellow"))
 
-    click.echo("4. Checking shell hooks...", nl=False)
+    click.echo("3. Checking shell hooks...", nl=False)
     installed_shells = []
     for shell in ["bash", "zsh"]:
         try:
@@ -142,9 +122,7 @@ def test():
         except (ValueError, FileNotFoundError):
             pass
     if installed_shells:
-        click.echo(
-            click.style(f" Installed: {', '.join(installed_shells)}", fg="green")
-        )
+        click.echo(click.style(f" Installed: {', '.join(installed_shells)}", fg="green"))
     else:
         click.echo(click.style(" Not installed", fg="yellow"))
         click.echo("   Run 'alias-suggest install' to install hooks")

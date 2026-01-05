@@ -10,11 +10,8 @@ __alias_suggest_check() {
     fi
     
     [ -z "$last_cmd" ] && return
-    [ "$last_cmd" = "$__ALIAS_SUGGEST_LAST_CMD" ] && return
-    export __ALIAS_SUGGEST_LAST_CMD="$last_cmd"
     
-    # Run in background to not block prompt
-    (alias-suggest analyze "$last_cmd" 2>/dev/null &)
+    alias-suggest analyze "$last_cmd" 2>&1
 }
 
 # Install hook based on shell type
