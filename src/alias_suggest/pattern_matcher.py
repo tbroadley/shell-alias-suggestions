@@ -71,6 +71,14 @@ def find_matches(
                 candidates.append(MatchCandidate(alias, 1.0, "exact"))
                 continue
 
+            if exp_tokens == cmd_tokens[: len(exp_tokens)]:
+                remaining_args = len(cmd_tokens) - len(exp_tokens)
+                confidence = 1.0 - (remaining_args * 0.05)
+                candidates.append(
+                    MatchCandidate(alias, max(0.5, confidence), "prefix_tokens")
+                )
+                continue
+
             if command.startswith(alias.expansion + " "):
                 confidence = len(alias.expansion) / len(command)
                 if confidence >= 0.3:
@@ -83,14 +91,6 @@ def find_matches(
                 confidence = len(alias.expansion) / len(command)
                 if confidence >= 0.5:
                     candidates.append(MatchCandidate(alias, confidence, "starts_with"))
-                continue
-
-            if exp_tokens == cmd_tokens[: len(exp_tokens)]:
-                remaining_args = len(cmd_tokens) - len(exp_tokens)
-                confidence = 1.0 - (remaining_args * 0.05)
-                candidates.append(
-                    MatchCandidate(alias, max(0.5, confidence), "prefix_tokens")
-                )
                 continue
 
             similarity = calculate_similarity(cmd_tokens, exp_tokens)

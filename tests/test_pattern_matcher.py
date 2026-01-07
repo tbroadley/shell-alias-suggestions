@@ -10,6 +10,7 @@ def sample_aliases() -> list[alias_parser.Alias]:
         alias_parser.Alias("ll", "ls -la", "/home/user/.bashrc"),
         alias_parser.Alias("la", "ls -A", "/home/user/.bashrc"),
         alias_parser.Alias("gst", "git status", "/home/user/.bashrc"),
+        alias_parser.Alias("v", "vim", "/home/user/.bashrc"),
         alias_parser.Alias("st", "status", "git config"),
         alias_parser.Alias("co", "checkout", "git config"),
         alias_parser.Alias("cb", "checkout -b", "git config"),
@@ -52,6 +53,12 @@ class TestFindMatches:
         matches = pattern_matcher.find_matches("ls -la /tmp", sample_aliases)
         assert len(matches) > 0
         assert any(m.alias.name == "ll" for m in matches)
+
+    def test_single_word_alias_with_args(self, sample_aliases):
+        matches = pattern_matcher.find_matches("vim abc.txt", sample_aliases)
+        assert len(matches) > 0
+        assert matches[0].alias.name == "v"
+        assert matches[0].confidence >= 0.8
 
     def test_git_prefix_match(self, sample_aliases):
         matches = pattern_matcher.find_matches(
