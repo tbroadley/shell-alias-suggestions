@@ -36,9 +36,23 @@ def format_suggestion(suggestion: Suggestion) -> str:
     return f"{CYAN}💡 Tip: Use '{suggestion.alias_name}' instead → {suggestion.expansion}{RESET}"
 
 
+def check_builtin_suggestions(command: str) -> str | None:
+    if not command or not command.strip():
+        return None
+    first_word = command.split()[0]
+    if first_word in config.BUILTIN_SUGGESTIONS:
+        alt, description = config.BUILTIN_SUGGESTIONS[first_word]
+        return f"{CYAN}💡 Tip: {description}{RESET}"
+    return None
+
+
 def analyze_command(command: str) -> str | None:
     if config.is_disabled():
         return None
+
+    builtin = check_builtin_suggestions(command)
+    if builtin:
+        return builtin
 
     if should_skip_command(command):
         return None
